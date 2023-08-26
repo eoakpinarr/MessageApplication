@@ -1,10 +1,13 @@
 import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 const LoginScreen = () => {
 
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
+  const navigation = useNavigation()
+
   return (
     <SafeAreaView className="flex-1 bg-white items-center">
       <KeyboardAvoidingView className="mt-auto mb-auto justify-center">
@@ -44,6 +47,12 @@ const LoginScreen = () => {
 
           <Pressable className="bg-[#4A55A2] p-2 w-40 mt-12 ml-auto mr-auto items-center rounded-md">
             <Text className="text-white font-semibold text-base">Giriş Yap</Text>
+          </Pressable>
+
+          <Pressable onPress={() => navigation.navigate("Register")}
+          className="mt-5 items-center justify-center" 
+          >
+            <Text>Hesabınız yok mu? Kayıt olun.</Text>
           </Pressable>
         </View>
 
