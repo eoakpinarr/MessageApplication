@@ -1,15 +1,16 @@
-import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native'
+import { Alert, Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import axios from 'axios'
 
 const RegisterScreen = () => {
 
     const [name, setName] = useState()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
-    const [selectedImage, setSelectedImage] = useState()
+    const [image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
     const navigation = useNavigation()
 
     const openImagePicker = () => {
@@ -27,7 +28,7 @@ const RegisterScreen = () => {
                 console.log('Image picker error: ', response.error);
             } else {
                 let imageUri = response.uri || response.assets?.[0]?.uri;
-                setSelectedImage(imageUri);
+                setImage(imageUri);
                 console.log(imageUri)
             }
         });
@@ -49,7 +50,7 @@ const RegisterScreen = () => {
                 console.log('Camera Error: ', response.error);
             } else {
                 let imageUri = response.uri || response.assets?.[0]?.uri;
-                setSelectedImage(imageUri);
+                setImage(imageUri);
                 console.log("İmage: ", imageUri);
             }
         });
@@ -60,9 +61,28 @@ const RegisterScreen = () => {
             name: name,
             email: email,
             password: password,
-            selectedImage: selectedImage
+            image: image
         }
-        console.log("Name", name, "Email: ", email, "Password: ", password, "İmageUrl: ", selectedImage)
+
+              //send a post request to the beckend API to register the user
+      axios
+      .post('http://localhost:8000/register', user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert(
+          'Registration succesfulll',
+          'You have been registered succesfully',
+        );
+        setName('');
+        setEmail('');
+        setPassword('');
+        setImage('');
+        navigation.navigate("Home")
+      })
+      .catch(error => {
+        console.log('Registration Failed', error);
+        Alert.alert('Registration Error', 'An error occured while registering');
+      });
     }
 
     return (
@@ -72,12 +92,17 @@ const RegisterScreen = () => {
                     <Image width={100} height={100} resizeMode='contain'
                         source={{ uri: "https://cdn-icons-png.flaticon.com/512/2665/2665038.png" }} />
                 </View>
-                <View className="mt-10 items-center justify-center">
-                    <Text className="text-[#4A55A2] text-base font-semibold">Kayıt Ol</Text>
-                    <Text className="mt-1 font-medium text-base">Hesabınızı Oluşturun</Text>
+                <View className="flex flex-row justify-between">
+                    <View className="mt-5 justify-center">
+                        <Text className="text-[#4A55A2] text-base font-semibold">Kayıt Ol</Text>
+                        <Text className="mt-1 font-medium text-base">Hesabınızı Oluşturun</Text>
+                    </View>
+                    <View className="justify-center mt-2 flex-0.2">
+                        <Image className="rounded-full" width={100} height={100} source={{ uri: image }} />
+                    </View>
                 </View>
 
-                <View className="mt-12">
+                <View className="mt-2">
                     <View>
                         <Text className="text-base font-semibold text-[#808080]">Kullanıcı Adı</Text>
                         <TextInput
@@ -85,7 +110,7 @@ const RegisterScreen = () => {
                             onChangeText={(text) => setName(text)}
                             placeholder='kullanıcı adınızı girin'
                             placeholderTextColor={"black"}
-                            className="border-b border-b-[#BDBDBD] my-2.5 w-72"
+                            className="border-b border-b-[#BDBDBD] my-2.5"
                         />
                     </View>
                     <View>
@@ -121,8 +146,9 @@ const RegisterScreen = () => {
                             <Ionicons name="camera" size={30} color="#87CEFA" />
                         </Pressable>
                     </View>
+                    
                     <Pressable className="bg-[#4A55A2] p-2 w-40 mt-12 ml-auto mr-auto items-center rounded-md"
-                    onPress={handleRegister}>
+                        onPress={handleRegister}>
                         <Text className="text-white font-semibold text-base">Kayıt Ol</Text>
                     </Pressable>
                     <Pressable onPress={() => navigation.navigate("Login")}
@@ -139,3 +165,5 @@ const RegisterScreen = () => {
 }
 
 export default RegisterScreen
+
+//Modal kullan profil fotosu üzerine basınca aç foto çek foto seç

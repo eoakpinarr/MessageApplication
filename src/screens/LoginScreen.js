@@ -1,12 +1,34 @@
 import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
 
 const LoginScreen = () => {
 
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const navigation = useNavigation()
+
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+    };
+    axios
+      .post('http://localhost:8000/login', user)
+      .then(response => {
+        console.log(response);
+        const token = response.data.token;
+        AsyncStorage.setItem('authToken', token);
+
+        navigation.navigate('Home');
+      })
+      .catch(error => {
+        console.log('Login Error', error);
+        Alert.alert('Login Error', 'Invalid email or password');
+      });
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white items-center">
@@ -45,7 +67,8 @@ const LoginScreen = () => {
             />
           </View>
 
-          <Pressable className="bg-[#4A55A2] p-2 w-40 mt-12 ml-auto mr-auto items-center rounded-md">
+          <Pressable onPress={handleLogin} 
+          className="bg-[#4A55A2] p-2 w-40 mt-12 ml-auto mr-auto items-center rounded-md">
             <Text className="text-white font-semibold text-base">Giriş Yap</Text>
           </Pressable>
 
