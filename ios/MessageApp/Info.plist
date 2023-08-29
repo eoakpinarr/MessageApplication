@@ -39,7 +39,7 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/AndDesign.ttf</string>
+		<string>Fonts/AntDesign.ttf</string>
 		<string>Fonts/Entypo.ttf</string>
 		<string>Fonts/Evilicons.ttf</string>
 		<string>Fonts/Feather.ttf</string>

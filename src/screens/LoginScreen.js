@@ -1,5 +1,5 @@
-import { Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, Image, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
@@ -9,6 +9,22 @@ const LoginScreen = () => {
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const navigation = useNavigation()
+
+useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken")
+        if (token) {
+          navigation.replace("Home")
+        } else {
+          console.log("authToken bulunamadı. Giriş yapınız")
+        }
+      } catch (error) {
+        console.log("Error: ", error)
+      }
+    }
+    checkLoginStatus()
+  }, [])
 
   const handleLogin = () => {
     const user = {
@@ -21,12 +37,11 @@ const LoginScreen = () => {
         console.log(response);
         const token = response.data.token;
         AsyncStorage.setItem('authToken', token);
-
-        navigation.navigate('Home');
+        navigation.replace('Home');
       })
       .catch(error => {
-        console.log('Login Error', error);
-        Alert.alert('Login Error', 'Invalid email or password');
+        console.log('Giriş Başarısız', error);
+        Alert.alert('Giriş Başarısız', 'Email veya şifre hatalı - veritabanında bulunamadı');
       });
   };
 
@@ -67,13 +82,13 @@ const LoginScreen = () => {
             />
           </View>
 
-          <Pressable onPress={handleLogin} 
-          className="bg-[#4A55A2] p-2 w-40 mt-12 ml-auto mr-auto items-center rounded-md">
+          <Pressable onPress={handleLogin}
+            className="bg-[#4A55A2] p-2 w-40 mt-12 ml-auto mr-auto items-center rounded-md">
             <Text className="text-white font-semibold text-base">Giriş Yap</Text>
           </Pressable>
 
           <Pressable onPress={() => navigation.navigate("Register")}
-          className="mt-5 items-center justify-center" 
+            className="mt-5 items-center justify-center"
           >
             <Text>Hesabınız yok mu? Kayıt olun.</Text>
           </Pressable>
