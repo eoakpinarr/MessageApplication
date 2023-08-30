@@ -37,7 +37,7 @@ useEffect(() => {
         console.log(response);
         const token = response.data.token;
         AsyncStorage.setItem('authToken', token);
-        navigation.replace('Home');
+        navigation.replace('Kişiler');
       })
       .catch(error => {
         console.log('Giriş Başarısız', error);

@@ -129,10 +129,6 @@ const RegisterScreen = () => {
                         </Pressable>
                     </View>
                 </View>
-
-                <View>
-                    {fileResponse && (<Text>{fileResponse.fileCopyUri}</Text>)}
-                </View>
                 <View className="mt-2">
                     <View>
                         <Text className="text-base font-semibold text-[#808080]">Kullanıcı Adı</Text>

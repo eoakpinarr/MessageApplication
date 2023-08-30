@@ -66,7 +66,7 @@ const User = ({ item }) => {
     <View className="flex flex-row items-center justify-start m-0.5 rounded-md border-b-0.5 border-[#808080]">
       <View className="flex mx-2 my-1">
         <Image width={50} height={50} className="rounded-full"
-          resizeMode='cover' source={{ uri: item.image }}
+          resizeMode='contain' source={{ uri: item.image }}
         />
       </View>
       <View className="flex-1">
@@ -93,8 +93,6 @@ const User = ({ item }) => {
         </Pressable>
       )
       }
-
-
     </View>
   )
 }

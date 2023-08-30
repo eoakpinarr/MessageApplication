@@ -8,30 +8,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
 import User from '../components/User'
+import Feather from "react-native-vector-icons/Feather"
 
-const HomeScreen = () => {
+const Kişiler = () => {
 
   const navigation = useNavigation()
   const { userId, setUserId } = useContext(UserType)
   const [users, setUsers] = useState([])
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "",
-      headerLeft: () => (
-        <Text className="font-semibold text-base text-[#FF4500]">Message App</Text>
-      ),
-      headerRight: () => (
-        <View className="flex flex-row gap-x-3 items-center">
-          <Ionicons name="chatbox-ellipses" size={24} color="#FF4500" onPress={() => navigation.navigate("Chats")} />
-          <Ionicons name="people" size={24} color="#FF4500" onPress={() => navigation.navigate("Friends")} />
-          <Pressable className="bg-[#FF4500] p-1 rounded-lg" onPress={Logout}>
-            <Text className="text-white font-semibold">Çıkış</Text>
-          </Pressable>
-        </View>
-      )
-    })
-  }, [])
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -70,6 +53,4 @@ const HomeScreen = () => {
   )
 }
 
-export default HomeScreen
-
-//Maplerken hata almamak için useState([]) köşeli parantez unutma!
+export default Kişiler

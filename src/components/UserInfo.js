@@ -1,14 +1,33 @@
 import { View, Text, Image, Pressable } from 'react-native'
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { UserType } from '../UserContext'
+import axios from 'axios'
 
 const UserInfo = () => {
+
+  const [person, setPerson] = useState([])
+  const { userId, setUserId } = useContext(UserType)
+
+  useEffect(() => {
+    const handleProfileDetail = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/user/${userId}`)
+        setPerson(response.data)
+      } catch (error) {
+        console.log("Error: ", error)
+      }
+    }
+    handleProfileDetail()
+  }, [person])
+
+
   return (
     <View className="">
       <View className="flex flex-row p-2 items-center justify-between bg-white">
         <Image resizeMode='contain'
           className="w-20 h-20 rounded-full"
-          source={{ uri: "https://lh3.googleusercontent.com/a/AAcHTteenm-cx_KzsHCFgubQDJJnyOl1-FxWiP7A6cgxFeZ3SsU=s288-c-no" }}
+          source={{ uri: person?.image }}
         />
         <View className="flex flex-row w-[50%] justify-between mx-auto">
           <View className="items-center justify-center">
@@ -16,18 +35,18 @@ const UserInfo = () => {
             <Text>Gönderiler</Text>
           </View>
           <View className="items-center justify-center">
-            <Text>0</Text>
+            <Text>{person?.friends?.length}</Text>
             <Text>Takipçi</Text>
           </View>
           <View className="items-center justify-center">
-            <Text>0</Text>
-            <Text>Takip</Text>
+            <Text>{person?.friendRequest?.length}</Text>
+            <Text>İstek</Text>
           </View>
         </View>
       </View>
       <View className="mt-4 pb-2 pl-2 pr-2">
-        <Text className="font-semibold text-sm">Kullanıcı Adı</Text>
-        <Text className="text-gray-600">Kullanıcı Detay</Text>
+        <Text className="font-semibold text-sm">{person?.name}</Text>
+        <Text className="text-gray-600">{person?.email}</Text>
         <View className="flex flex-row justify-between mt-4">
           <Pressable className="w-[49%] bg-orange-400 items-center rounded-md p-2 ">
             <Text className="text-white font-semibold">Profili Düzenle</Text>

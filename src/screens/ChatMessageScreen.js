@@ -18,6 +18,7 @@ const ChatMessageScreen = () => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false)
   const [message, setMessage] = useState("")
   const [recepientData, setRecepientData] = useState()
+  const [senderData, setSenderData] = useState()
   const [messages, setMessages] = useState([])
   const [modal, setModal] = useState(false)
 
@@ -32,8 +33,8 @@ const ChatMessageScreen = () => {
   }, [])
 
   const scrollToBottom = () => {
-    if(scrollViewRef.current){
-      scrollViewRef.current.scrollToEnd({animated: false})
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: false })
     }
   }
 
@@ -73,6 +74,19 @@ const ChatMessageScreen = () => {
     }
     fetchRecepientData()
   }, [])
+
+  useEffect(() => {
+    const handleProfileDetail = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/user/${userId}`)
+        setSenderData(response.data)
+      } catch (error) {
+        console.log("Error: ", error)
+      }
+    }
+    handleProfileDetail()
+  }, [senderData])
+
 
   const handleSend = async (messageType, imageUri) => {
     try {
@@ -256,7 +270,7 @@ const ChatMessageScreen = () => {
 
   return (
     <KeyboardAvoidingView className="flex-1 bg-[#f0f0f0]">
-      <ScrollView ref={scrollViewRef} contentContainerStyle={{flexGrow: 1}} onContentSizeChange={handleContentSizeChange}>
+      <ScrollView ref={scrollViewRef} contentContainerStyle={{ flexGrow: 1 }} onContentSizeChange={handleContentSizeChange}>
         {messages.map((item, index) => {
           if (item.messageType === "text") {
             const isSelected = selectedMessages.includes(item._id)
